@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotate Images</title>
+    {% load static %}
+    
+    <!-- Tham chiếu file CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        /* Styles cho trang web */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        /* Thêm style cho nút quay lại trang chủ */
+        .back-to-home {
+            text-decoration: none;
+            color: white;
+            background-color: #28a745;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-to-home:hover {
+            background-color: #218838;
+        }
+
+        /* Tạo một container chia thành 2 cột */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Cột bên trái - Danh sách tên ảnh */
+        .image-list {
+            width: 30%; /* Chiếm 30% chiều rộng */
+            padding-right: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .image-item {
+            margin-bottom: 10px;
+        }
+
+        .image-item a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .image-item a:hover {
+            background-color: #e9e9e9;
+        }
+
+        /* Cột bên phải - Hiển thị ảnh */
+        .image-display {
+            width: 65%; /* Chiếm 65% chiều rộng */
+            text-align: center;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .image-display img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        /* Canvas */
+        .canvas-container {
+            margin-top: 20px;
+        }
+
+        /* Result Box */
+        .result-box {
+            border: 2px solid #d11e1e;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #ffffff;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Loading spinner */
+        #loader {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 5px;
+            z-index: 1000;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload và Annotate Hình Ảnh</h1>
+    
+    <!-- Nút quay lại trang chủ -->
+    <a href="{% url 'home' %}" class="back-to-home">&larr; Quay lại trang chủ</a>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+    
+    <h2>Danh sách ảnh đã tải lên</h2>
+    
+    <div class="container">
+        <!-- Cột bên trái: Danh sách tên ảnh -->
+        <div class="image-list">
+            {% for image in images %}
+                <div class="image-item" id="image-{{ image.id }}">
+                    <!-- Checkbox để chọn ảnh để xóa -->
+                    <input type="checkbox" class="image-checkbox" data-image-id="{{ image.id }}">
+                    <!-- Tên ảnh có thể nhấn vào -->
+                    <a href="#" onclick="showImage('{{ image.image.url }}', '{{ image.image.name }}')">{{ image.image.name }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    
+        <!-- Cột bên phải: Hiển thị ảnh khi bấm vào tên -->
+        <div class="image-display" id="image-display" style="display: none; text-align: center; margin-left: 20px;">
+            <h3>Ảnh bạn đã chọn:</h3>
+            <img id="displayed-image" src="" alt="Selected Image" width="100%">
+        </div>
+    </div>
+    
+    <div>
+        <!-- Nút xóa ảnh đã chọn -->
+        <button id="delete-selected-images" onclick="deleteSelectedImages()" style="color: red; margin-top: 20px;">Xóa ảnh đã chọn</button>
+    </div>
+
+    <h2>Annotate</h2>
+    <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loader">Đang xử lý...</div>
+
+    {% load static %}
+    <!-- Tham chiếu file JavaScript -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

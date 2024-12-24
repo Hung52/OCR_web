@@ -1,0 +1,18 @@
+django-admin startproject <name_pj>
+python manage.py startapp file_upload
+python manage.py runserver 8006
+
+python manage.py makemigrations
+python manage.py migrate
+
+user: hung321
+pass: 123456
+
+user: hung111
+pass: abc123@123
+
+conda deactivate
+python3 -m venv myenv
+source myenv/bin/activate
+pip freeze > requirements.txt
+pip3 install -r requirements.txt

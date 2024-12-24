@@ -1,0 +1,113 @@
+/* Styles cho trang web */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+form {
+    margin-top: 20px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
+
+/* Thêm style cho nút quay lại trang chủ */
+.back-to-home {
+    text-decoration: none;
+    color: white;
+    background-color: #28a745;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.back-to-home:hover {
+    background-color: #218838;
+}
+
+/* Tạo một container chia thành 2 cột */
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Cột bên trái - Danh sách tên ảnh */
+.image-list {
+    width: 30%; /* Chiếm 30% chiều rộng */
+    padding-right: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.image-item {
+    margin-bottom: 10px;
+}
+
+.image-item a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.image-item a:hover {
+    background-color: #e9e9e9;
+}
+
+/* Cột bên phải - Hiển thị ảnh */
+.image-display {
+    width: 65%; /* Chiếm 65% chiều rộng */
+    text-align: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.image-display img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+/* Canvas */
+.canvas-container {
+    margin-top: 20px;
+}
+
+/* Result Box */
+.result-box {
+    border: 2px solid #d11e1e;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
