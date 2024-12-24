@@ -33,6 +33,9 @@ urlpatterns = [
     # Bao gồm các URL từ file_upload
     path('upload/', include('ocr_data.urls')),
 
+    path('delete_images/', views.delete_images, name='delete_images'),
+    path('get_images/', views.get_images, name='get_images'),
+
     # Đăng ký các URL liên quan đến tài khoản người dùng Django
     path('accounts/', include('django.contrib.auth.urls')),
 ]

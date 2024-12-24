@@ -13,6 +13,7 @@ from .models import Region, AnnotatedImage
 import json
 from .models import Image
 from django.http import Http404
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def home(request):
@@ -158,21 +159,39 @@ def save_annotations(request, image_id):
             )
         return JsonResponse({'status': 'success'})   
 
-def delete_image(request):
+@csrf_exempt
+def delete_images(request):
     if request.method == 'POST':
-        # Nhận danh sách ID ảnh cần xóa
+        # Lấy dữ liệu từ yêu cầu POST
         data = json.loads(request.body)
         image_ids = data.get('image_ids', [])
-        
+
         if image_ids:
-            # Lọc các ảnh cần xóa theo ID
-            images = Image.objects.filter(id__in=image_ids)
-            
-            # Xóa các ảnh
-            images.delete()
-            
-            return JsonResponse({'status': 'success', 'message': 'Images deleted successfully.'})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'No images selected for deletion.'}, status=400)
+            # Xóa tất cả ảnh có ID trong danh sách
+            deleted_count, _ = AnnotatedImage.objects.filter(id__in=image_ids).delete()
+
+            if deleted_count == len(image_ids):
+                # Sau khi xóa ảnh, lấy danh sách ảnh còn lại
+                images = AnnotatedImage.objects.all()
+                images_data = [
+                    {'id': image.id, 'name': image.image.name, 'url': image.image.url}
+                    for image in images
+                ]
+                # Trả về danh sách ảnh còn lại sau khi xóa
+                return JsonResponse({'status': 'success', 'images': images_data})
+            else:
+                return JsonResponse({'status': 'failure', 'message': 'Some images could not be deleted'}, status=400)
+        
+        return JsonResponse({'status': 'failure', 'message': 'No image IDs provided'}, status=400)
     
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=400)
+    return JsonResponse({'status': 'failure', 'message': 'Invalid request method'}, status=405)
+
+
+def get_images(request):
+    # Trả về tất cả ảnh hiện có
+    images = AnnotatedImage.objects.all()
+    images_data = [
+        {'id': image.id, 'name': image.image.name, 'url': image.image.url}
+        for image in images
+    ]
+    return JsonResponse({'images': images_data})

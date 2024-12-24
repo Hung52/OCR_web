@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.upload_file_ocr, name='ocr_data'),
     path('register/', views.register, name='register'),
     path('annotate/', views.upload_and_annotate, name='annotate'),
-    path('delete_image/<int:image_id>/', views.delete_image, name='delete_image'),
+    path('get_images/', views.get_images, name='get_images'),
+    path('delete_images/', views.delete_images, name='delete_images'),
 ]

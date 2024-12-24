@@ -150,6 +150,9 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>
+        <!-- Nút xóa ảnh đã chọn -->
+        <button id="delete-selected-images" onclick="deleteSelectedImages()" style="color: rgb(252, 252, 252); margin-top: 20px;">Xóa ảnh đã chọn</button>
+        
     </form>
     
     <h2>Danh sách ảnh đã tải lên</h2>
@@ -162,7 +165,7 @@
                     <!-- Checkbox để chọn ảnh để xóa -->
                     <input type="checkbox" class="image-checkbox" data-image-id="{{ image.id }}">
                     <!-- Tên ảnh có thể nhấn vào -->
-                    <a href="#" onclick="showImage('{{ image.image.url }}', '{{ image.image.name }}')">{{ image.image.name }}</a>
+                    <a href="#" class="image-link" data-image-url="{{ image.image.url }}">{{ image.image.name }}</a>
                 </div>
             {% endfor %}
         </div>
@@ -174,11 +177,7 @@
         </div>
     </div>
     
-    <div>
-        <!-- Nút xóa ảnh đã chọn -->
-        <button id="delete-selected-images" onclick="deleteSelectedImages()" style="color: red; margin-top: 20px;">Xóa ảnh đã chọn</button>
-    </div>
-
+    
     <h2>Annotate</h2>
     <div class="canvas-container">
         <canvas id="canvas"></canvas>
